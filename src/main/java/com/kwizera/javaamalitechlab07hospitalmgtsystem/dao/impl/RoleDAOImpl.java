@@ -10,7 +10,11 @@ import java.util.List;
 
 public class RoleDAOImpl implements RoleDAO {
 
-    private Connection connection;
+    private final Connection connection;
+
+    public RoleDAOImpl(Connection connection) {
+        this.connection = connection;
+    }
 
     @Override
     public Role findById(int id) {
@@ -26,8 +30,8 @@ public class RoleDAOImpl implements RoleDAO {
                 role.setName(rs.getString("name"));
             }
         } catch (SQLException e) {
-            e.printStackTrace();
             CustomLogger.log(CustomLogger.LogLevel.ERROR, "Unable to find role by id. SQLException");
+            throw new RuntimeException("Unable to find role by id." + e.getMessage(), e);
         }
 
         return role;
@@ -45,8 +49,8 @@ public class RoleDAOImpl implements RoleDAO {
                 roles.add(role);
             }
         } catch (SQLException e) {
-            e.printStackTrace();
             CustomLogger.log(CustomLogger.LogLevel.ERROR, "Unable to find roles. SQLException");
+            throw new RuntimeException("Unable to find roles." + e.getMessage(), e);
         }
         return roles;
     }
@@ -57,8 +61,8 @@ public class RoleDAOImpl implements RoleDAO {
             stmt.setString(1, role.getName());
             stmt.executeUpdate();
         } catch (SQLException e) {
-            e.printStackTrace();
             CustomLogger.log(CustomLogger.LogLevel.ERROR, "Unable to save role. SQLException");
+            throw new RuntimeException("Unable to save role." + e.getMessage(), e);
         }
     }
 
@@ -69,8 +73,8 @@ public class RoleDAOImpl implements RoleDAO {
             stmt.setInt(2, role.getId());
             stmt.executeUpdate();
         } catch (SQLException e) {
-            e.printStackTrace();
             CustomLogger.log(CustomLogger.LogLevel.ERROR, "Unable to update role. SQLException");
+            throw new RuntimeException("Unable to update role. SQLException" + e.getMessage(), e);
         }
     }
 
@@ -80,8 +84,8 @@ public class RoleDAOImpl implements RoleDAO {
             stmt.setInt(1, id);
             stmt.executeUpdate();
         } catch (SQLException e) {
-            e.printStackTrace();
             CustomLogger.log(CustomLogger.LogLevel.ERROR, "Unable to delete role. SQLException");
+            throw new RuntimeException("Unable to delete role. SQLException" + e.getMessage(), e);
         }
     }
 }

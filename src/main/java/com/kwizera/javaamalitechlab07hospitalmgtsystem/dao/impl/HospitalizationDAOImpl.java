@@ -11,8 +11,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class HospitalizationDAOImpl implements HospitalizationDAO {
-    private Connection connection;
+    private final Connection connection;
     private PatientDAO patientDAO;
+
+    public HospitalizationDAOImpl(Connection connection) {
+        this.connection = connection;
+    }
 
     @Override
     public Hospitalization findById(int id) {
@@ -33,6 +37,7 @@ public class HospitalizationDAOImpl implements HospitalizationDAO {
         } catch (SQLException e) {
             e.printStackTrace();
             CustomLogger.log(CustomLogger.LogLevel.ERROR, "Unable to find hospitalization by id. SQLException");
+            throw new RuntimeException("Unable to find hospitalization by id " + e.getMessage(), e);
         }
 
         return hospitalization;
@@ -54,8 +59,8 @@ public class HospitalizationDAOImpl implements HospitalizationDAO {
                 hospitalizations.add(hospitalization);
             }
         } catch (SQLException e) {
-            e.printStackTrace();
             CustomLogger.log(CustomLogger.LogLevel.ERROR, "Unable to find hospitalizations. SQLException");
+            throw new RuntimeException("Unable to find hospitalizations. " + e.getMessage(), e);
         }
         return hospitalizations;
     }
@@ -69,8 +74,8 @@ public class HospitalizationDAOImpl implements HospitalizationDAO {
             stmt.setString(4, hospitalization.getNotes());
             stmt.executeUpdate();
         } catch (SQLException e) {
-            e.printStackTrace();
             CustomLogger.log(CustomLogger.LogLevel.ERROR, "Unable to save hospitalization. SQLException");
+            throw new RuntimeException("Unable to save hospitalization. " + e.getMessage(), e);
         }
     }
 
@@ -83,8 +88,8 @@ public class HospitalizationDAOImpl implements HospitalizationDAO {
             stmt.setString(4, hospitalization.getNotes());
             stmt.executeUpdate();
         } catch (SQLException e) {
-            e.printStackTrace();
             CustomLogger.log(CustomLogger.LogLevel.ERROR, "Unable to update hospitalization. SQLException");
+            throw new RuntimeException("Unable to update hospitalization. " + e.getMessage(), e);
         }
     }
 
@@ -94,8 +99,8 @@ public class HospitalizationDAOImpl implements HospitalizationDAO {
             stmt.setInt(1, id);
             stmt.executeUpdate();
         } catch (SQLException e) {
-            e.printStackTrace();
             CustomLogger.log(CustomLogger.LogLevel.ERROR, "Unable to delete hospitalization. SQLException");
+            throw new RuntimeException("Unable to delete hospitalization. " + e.getMessage(), e);
         }
     }
 }

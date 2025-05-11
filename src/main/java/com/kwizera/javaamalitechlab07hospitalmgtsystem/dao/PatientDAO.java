@@ -9,9 +9,11 @@ public interface PatientDAO {
 
     List<Patient> findAll();
 
-    void save(Patient employee);
+    List<Patient> findByName(String name);
 
-    void update(Patient employee);
+    void save(Patient patient);
 
-    void delete(int id);
+    void update(Patient patient);
+
+    void delete(Patient patient);
 }

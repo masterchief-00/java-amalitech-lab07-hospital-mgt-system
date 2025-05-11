@@ -16,10 +16,11 @@ import java.sql.SQLException;
 public class Main extends Application {
     @Override
     public void start(Stage stage) throws IOException {
-        FXMLLoader fxmlLoader = new FXMLLoader(Main.class.getResource("x.fxml"));
-        Scene scene = new Scene(fxmlLoader.load(), 320, 240);
-        stage.setTitle("Hello!");
+        FXMLLoader fxmlLoader = new FXMLLoader(Main.class.getResource("/com/kwizera/javaamalitechlab07hospitalmgtsystem/views/main_page.fxml"));
+        Scene scene = new Scene(fxmlLoader.load(), 977, 441);
+        stage.setTitle("Patient Hospitalization System");
         stage.setScene(scene);
+        stage.setResizable(false);
         stage.show();
     }
 
