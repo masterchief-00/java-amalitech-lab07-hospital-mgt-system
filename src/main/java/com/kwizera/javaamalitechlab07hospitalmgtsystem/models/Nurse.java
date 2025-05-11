@@ -20,4 +20,12 @@ public class Nurse {
     public void setRotation(String rotation) {
         this.rotation = rotation;
     }
+
+    public Employee getEmployee() {
+        return employee;
+    }
+
+    public void setEmployee(Employee employee) {
+        this.employee = employee;
+    }
 }
