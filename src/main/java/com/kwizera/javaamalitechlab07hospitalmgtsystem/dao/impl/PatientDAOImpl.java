@@ -30,7 +30,7 @@ public class PatientDAOImpl implements PatientDAO {
                 patient.setFirstName(rs.getString("first_name"));
                 patient.setSurName(rs.getString("sur_name"));
                 patient.setAddress(rs.getString("address"));
-                patient.setTelephoneNumber("telephone_number");
+                patient.setTelephoneNumber(rs.getString("telephone_number"));
                 patient.setDob(rs.getDate("dob").toLocalDate());
             }
         } catch (SQLException e) {
@@ -53,7 +53,7 @@ public class PatientDAOImpl implements PatientDAO {
                 patient.setFirstName(rs.getString("first_name"));
                 patient.setSurName(rs.getString("sur_name"));
                 patient.setAddress(rs.getString("address"));
-                patient.setTelephoneNumber("telephone_number");
+                patient.setTelephoneNumber(rs.getString("telephone_number"));
                 patient.setDob(rs.getDate("dob").toLocalDate());
                 patients.add(patient);
             }
@@ -65,8 +65,39 @@ public class PatientDAOImpl implements PatientDAO {
     }
 
     @Override
+    public List<Patient> findByName(String name) {
+        List<Patient> patients = new ArrayList<>();
+        try (PreparedStatement stmt = connection.prepareStatement("SELECT * FROM patient WHERE LOWER(first_name) LIKE ? OR LOWER(sur_name) LIKE ?")) {
+
+            String search = "%" + name.toLowerCase() + "%";
+
+            stmt.setString(1, search);
+            stmt.setString(2, search);
+            ResultSet rs = stmt.executeQuery();
+
+            if (rs.next()) {
+                Patient patient = new Patient();
+                patient.setId(rs.getInt("id"));
+                patient.setPatientNo(rs.getString("patient_no"));
+                patient.setFirstName(rs.getString("first_name"));
+                patient.setSurName(rs.getString("sur_name"));
+                patient.setAddress(rs.getString("address"));
+                patient.setTelephoneNumber(rs.getString("telephone_number"));
+                patient.setDob(rs.getDate("dob").toLocalDate());
+
+                patients.add(patient);
+            }
+        } catch (SQLException e) {
+            CustomLogger.log(CustomLogger.LogLevel.ERROR, "Unable to find patient by id. SQLException");
+            throw new RuntimeException("Unable to find patient by id. " + e.getMessage(), e);
+        }
+
+        return patients;
+    }
+
+    @Override
     public void save(Patient patient) {
-        try (PreparedStatement stmt = connection.prepareStatement("INSERT INTO patient (patient_no,first_name,sur_name,address,telephone_number,dob) VALUES (?,?,?,?,?)")) {
+        try (PreparedStatement stmt = connection.prepareStatement("INSERT INTO patient (patient_no,first_name,sur_name,address,telephone_number,dob) VALUES (?,?,?,?,?,?)")) {
             stmt.setString(1, patient.getPatientNo());
             stmt.setString(2, patient.getFirstName());
             stmt.setString(3, patient.getSurName());
@@ -97,9 +128,9 @@ public class PatientDAOImpl implements PatientDAO {
     }
 
     @Override
-    public void delete(int id) {
+    public void delete(Patient patient) {
         try (PreparedStatement stmt = connection.prepareStatement("DELETE FROM patient WHERE id = ?")) {
-            stmt.setInt(1, id);
+            stmt.setInt(1, patient.getId());
             stmt.executeUpdate();
         } catch (SQLException e) {
             CustomLogger.log(CustomLogger.LogLevel.ERROR, "Unable to delete patient. SQLException");
