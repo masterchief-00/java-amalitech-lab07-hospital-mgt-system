@@ -1,14 +1,15 @@
 package com.kwizera.javaamalitechlab07hospitalmgtsystem.models;
 
-public class Employee {
+import java.time.LocalDate;
+
+public class Patient {
     private int id;
-    private String employeeNo;
+    private String patientNo;
     private String firstName;
     private String surName;
     private String address;
     private String telephoneNumber;
-    private double salary;
-    private Role role;
+    private LocalDate dob;
 
     public int getId() {
         return id;
@@ -18,12 +19,12 @@ public class Employee {
         this.id = id;
     }
 
-    public String getEmployeeNo() {
-        return employeeNo;
+    public String getPatientNo() {
+        return patientNo;
     }
 
-    public void setEmployeeNo(String employeeNo) {
-        this.employeeNo = employeeNo;
+    public void setPatientNo(String patientNo) {
+        this.patientNo = patientNo;
     }
 
     public String getFirstName() {
@@ -58,19 +59,11 @@ public class Employee {
         this.telephoneNumber = telephoneNumber;
     }
 
-    public double getSalary() {
-        return salary;
+    public LocalDate getDob() {
+        return dob;
     }
 
-    public void setSalary(double salary) {
-        this.salary = salary;
-    }
-
-    public Role getRole() {
-        return role;
-    }
-
-    public void setRole(Role role) {
-        this.role = role;
+    public void setDob(LocalDate dob) {
+        this.dob = dob;
     }
 }
