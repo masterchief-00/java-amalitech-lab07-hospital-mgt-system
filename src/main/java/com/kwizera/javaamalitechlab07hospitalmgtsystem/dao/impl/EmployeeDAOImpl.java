@@ -11,8 +11,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class EmployeeDAOImpl implements EmployeeDAO {
-    private Connection connection;
+    private final Connection connection;
     private RoleDAO roleDAO;
+
+    public EmployeeDAOImpl(Connection connection) {
+        this.connection = connection;
+    }
 
     @Override
     public Employee findById(int id) {
@@ -39,8 +43,8 @@ public class EmployeeDAOImpl implements EmployeeDAO {
 
             }
         } catch (SQLException e) {
-            e.printStackTrace();
             CustomLogger.log(CustomLogger.LogLevel.ERROR, "Unable to find employee by id. SQLException");
+            throw new RuntimeException("Unable to find employee by id. " + e.getMessage(), e);
         }
         return employee;
     }
@@ -68,8 +72,8 @@ public class EmployeeDAOImpl implements EmployeeDAO {
                 employees.add(employee);
             }
         } catch (SQLException e) {
-            e.printStackTrace();
             CustomLogger.log(CustomLogger.LogLevel.ERROR, "Unable to find employees. SQLException");
+            throw new RuntimeException("Unable to find employees. " + e.getMessage(), e);
         }
         return employees;
     }
@@ -88,8 +92,8 @@ public class EmployeeDAOImpl implements EmployeeDAO {
 
             stmt.executeUpdate();
         } catch (SQLException e) {
-            e.printStackTrace();
             CustomLogger.log(CustomLogger.LogLevel.ERROR, "Unable to save employee. SQLException");
+            throw new RuntimeException("Unable to save employee. " + e.getMessage(), e);
         }
     }
 
@@ -107,8 +111,8 @@ public class EmployeeDAOImpl implements EmployeeDAO {
 
             stmt.executeUpdate();
         } catch (SQLException e) {
-            e.printStackTrace();
             CustomLogger.log(CustomLogger.LogLevel.ERROR, "Unable to update employee. SQLException");
+            throw new RuntimeException("Unable to update employee. " + e.getMessage(), e);
         }
     }
 
@@ -118,8 +122,8 @@ public class EmployeeDAOImpl implements EmployeeDAO {
             stmt.setInt(1, id);
             stmt.executeUpdate();
         } catch (SQLException e) {
-            e.printStackTrace();
             CustomLogger.log(CustomLogger.LogLevel.ERROR, "Unable to delete employee. SQLException");
+            throw new RuntimeException("Unable to delete employee. " + e.getMessage(), e);
         }
     }
 }

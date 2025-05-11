@@ -11,9 +11,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class DiagnosticDAOImpl implements DiagnosticDAO {
-    private Connection connection;
+    private final Connection connection;
     private HospitalizationDAO hospitalizationDAO;
     private DoctorDAO doctorDAO;
+
+    public DiagnosticDAOImpl(Connection connection) {
+        this.connection = connection;
+    }
 
     @Override
     public Diagnostic findById(int id) {
@@ -35,8 +39,8 @@ public class DiagnosticDAOImpl implements DiagnosticDAO {
 
             }
         } catch (SQLException e) {
-            e.printStackTrace();
             CustomLogger.log(CustomLogger.LogLevel.ERROR, "Unable to find diagnostic by id. SQLException");
+            throw new RuntimeException("Unable to find diagnostic by id. " + e.getMessage(), e);
         }
 
         return diagnostic;
@@ -60,8 +64,8 @@ public class DiagnosticDAOImpl implements DiagnosticDAO {
                 diagnostics.add(diagnostic);
             }
         } catch (SQLException e) {
-            e.printStackTrace();
             CustomLogger.log(CustomLogger.LogLevel.ERROR, "Unable to find diagnostics. SQLException");
+            throw new RuntimeException("Unable to find diagnostics. " + e.getMessage(), e);
         }
         return diagnostics;
     }
@@ -76,8 +80,8 @@ public class DiagnosticDAOImpl implements DiagnosticDAO {
             stmt.setDate(5, Date.valueOf(diagnostic.getDate()));
             stmt.executeUpdate();
         } catch (SQLException e) {
-            e.printStackTrace();
             CustomLogger.log(CustomLogger.LogLevel.ERROR, "Unable to save diagnostic. SQLException");
+            throw new RuntimeException("Unable to save diagnostic. " + e.getMessage(), e);
         }
     }
 
@@ -91,8 +95,8 @@ public class DiagnosticDAOImpl implements DiagnosticDAO {
             stmt.setDate(5, Date.valueOf(diagnostic.getDate()));
             stmt.executeUpdate();
         } catch (SQLException e) {
-            e.printStackTrace();
             CustomLogger.log(CustomLogger.LogLevel.ERROR, "Unable to update diagnostic. SQLException");
+            throw new RuntimeException("Unable to update diagnostic. " + e.getMessage(), e);
         }
     }
 
@@ -102,8 +106,8 @@ public class DiagnosticDAOImpl implements DiagnosticDAO {
             stmt.setInt(1, id);
             stmt.executeUpdate();
         } catch (SQLException e) {
-            e.printStackTrace();
             CustomLogger.log(CustomLogger.LogLevel.ERROR, "Unable to delete diagnostic. SQLException");
+            throw new RuntimeException("Unable to delete diagnostic. " + e.getMessage(), e);
         }
     }
 }

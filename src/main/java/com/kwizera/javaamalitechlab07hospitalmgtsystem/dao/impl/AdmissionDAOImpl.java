@@ -12,10 +12,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class AdmissionDAOImpl implements AdmissionDAO {
-    private Connection connection;
+    private final Connection connection;
     private HospitalizationDAO hospitalizationDAO;
     private BedDAO bedDAO;
     private WardDAO wardDAO;
+
+    public AdmissionDAOImpl(Connection connection) {
+        this.connection = connection;
+    }
 
     @Override
     public Admission findById(int id) {
@@ -39,8 +43,8 @@ public class AdmissionDAOImpl implements AdmissionDAO {
 
             }
         } catch (SQLException e) {
-            e.printStackTrace();
             CustomLogger.log(CustomLogger.LogLevel.ERROR, "Unable to find admission by id. SQLException");
+            throw new RuntimeException("Unable to find admission by id." + e.getMessage(), e);
         }
 
         return admission;
@@ -69,6 +73,7 @@ public class AdmissionDAOImpl implements AdmissionDAO {
         } catch (SQLException e) {
             e.printStackTrace();
             CustomLogger.log(CustomLogger.LogLevel.ERROR, "Unable to find admissions. SQLException");
+            throw new RuntimeException("Unable to find admissions. " + e.getMessage(), e);
         }
         return admissions;
     }
@@ -86,16 +91,34 @@ public class AdmissionDAOImpl implements AdmissionDAO {
         } catch (SQLException e) {
             e.printStackTrace();
             CustomLogger.log(CustomLogger.LogLevel.ERROR, "Unable to save admission. SQLException");
+            throw new RuntimeException("Unable to save admission. " + e.getMessage(), e);
         }
     }
 
     @Override
-    public void update(Admission employee) {
-
+    public void update(Admission admission) {
+        try (PreparedStatement stmt = connection.prepareStatement("UPDATE admission SET hospitalization_id = ?,ward_id = ?,bed_id = ?,admitted_at = ?,discharged_at = ?,notes = ? WHERE id = ?")) {
+            stmt.setInt(1, admission.getHospitalization().getId());
+            stmt.setInt(2, admission.getWard().getId());
+            stmt.setInt(3, admission.getBed().getId());
+            stmt.setDate(4, Date.valueOf(admission.getAdmittedAt()));
+            stmt.setDate(5, Date.valueOf(admission.getDischargedAt()));
+            stmt.setString(6, admission.getNotes());
+            stmt.executeUpdate();
+        } catch (SQLException e) {
+            CustomLogger.log(CustomLogger.LogLevel.ERROR, "Unable to update admission. SQLException");
+            throw new RuntimeException("Unable to update admission. " + e.getMessage(), e);
+        }
     }
 
     @Override
     public void delete(int id) {
-
+        try (PreparedStatement stmt = connection.prepareStatement("DELETE FROM admission WHERE id = ?")) {
+            stmt.setInt(1, id);
+            stmt.executeUpdate();
+        } catch (SQLException e) {
+            CustomLogger.log(CustomLogger.LogLevel.ERROR, "Unable to delete admission. SQLException");
+            throw new RuntimeException("Unable to delete admission. " + e.getMessage(), e);
+        }
     }
 }

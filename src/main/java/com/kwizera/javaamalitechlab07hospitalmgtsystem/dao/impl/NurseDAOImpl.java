@@ -14,6 +14,10 @@ public class NurseDAOImpl implements NurseDAO {
     private Connection connection;
     private EmployeeDAO employeeDAO;
 
+    public NurseDAOImpl(Connection connection) {
+        this.connection = connection;
+    }
+
     @Override
     public Nurse findById(int id) {
         Nurse nurse = null;
@@ -29,8 +33,8 @@ public class NurseDAOImpl implements NurseDAO {
                 nurse.setEmployee(employee);
             }
         } catch (SQLException e) {
-            e.printStackTrace();
             CustomLogger.log(CustomLogger.LogLevel.ERROR, "Unable to find nurse by id. SQLException");
+            throw new RuntimeException("Unable to find nurse by id. " + e.getMessage(), e);
         }
 
         return nurse;
@@ -51,8 +55,8 @@ public class NurseDAOImpl implements NurseDAO {
                 nurses.add(nurse);
             }
         } catch (SQLException e) {
-            e.printStackTrace();
             CustomLogger.log(CustomLogger.LogLevel.ERROR, "Unable to find nurses. SQLException");
+            throw new RuntimeException("Unable to find nurses. " + e.getMessage(), e);
         }
         return nurses;
     }
@@ -64,8 +68,8 @@ public class NurseDAOImpl implements NurseDAO {
             stmt.setInt(2, nurse.getEmployee().getId());
             stmt.executeUpdate();
         } catch (SQLException e) {
-            e.printStackTrace();
             CustomLogger.log(CustomLogger.LogLevel.ERROR, "Unable to save nurse. SQLException");
+            throw new RuntimeException("Unable to save nurse. " + e.getMessage(), e);
         }
     }
 
@@ -76,8 +80,8 @@ public class NurseDAOImpl implements NurseDAO {
             stmt.setInt(2, nurse.getEmployee().getId());
             stmt.executeUpdate();
         } catch (SQLException e) {
-            e.printStackTrace();
             CustomLogger.log(CustomLogger.LogLevel.ERROR, "Unable to update nurse. SQLException");
+            throw new RuntimeException("Unable to update nurse. " + e.getMessage(), e);
         }
     }
 
@@ -87,8 +91,8 @@ public class NurseDAOImpl implements NurseDAO {
             stmt.setInt(1, id);
             stmt.executeUpdate();
         } catch (SQLException e) {
-            e.printStackTrace();
             CustomLogger.log(CustomLogger.LogLevel.ERROR, "Unable to delete nurse. SQLException");
+            throw new RuntimeException("Unable to delete nurse. " + e.getMessage(), e);
         }
     }
 }

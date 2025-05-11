@@ -10,7 +10,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class PatientDAOImpl implements PatientDAO {
-    private Connection connection;
+    private final Connection connection;
+
+    public PatientDAOImpl(Connection connection) {
+        this.connection = connection;
+    }
 
     @Override
     public Patient findById(int id) {
@@ -30,8 +34,8 @@ public class PatientDAOImpl implements PatientDAO {
                 patient.setDob(rs.getDate("dob").toLocalDate());
             }
         } catch (SQLException e) {
-            e.printStackTrace();
             CustomLogger.log(CustomLogger.LogLevel.ERROR, "Unable to find patient by id. SQLException");
+            throw new RuntimeException("Unable to find patient by id. " + e.getMessage(), e);
         }
 
         return patient;
@@ -54,8 +58,8 @@ public class PatientDAOImpl implements PatientDAO {
                 patients.add(patient);
             }
         } catch (SQLException e) {
-            e.printStackTrace();
             CustomLogger.log(CustomLogger.LogLevel.ERROR, "Unable to find patients. SQLException");
+            throw new RuntimeException("Unable to find patients." + e.getMessage(), e);
         }
         return patients;
     }
@@ -71,8 +75,8 @@ public class PatientDAOImpl implements PatientDAO {
             stmt.setDate(6, Date.valueOf(patient.getDob()));
             stmt.executeUpdate();
         } catch (SQLException e) {
-            e.printStackTrace();
             CustomLogger.log(CustomLogger.LogLevel.ERROR, "Unable to save patient. SQLException");
+            throw new RuntimeException("Unable to find patients." + e.getMessage(), e);
         }
     }
 
@@ -87,8 +91,8 @@ public class PatientDAOImpl implements PatientDAO {
             stmt.setDate(6, Date.valueOf(patient.getDob()));
             stmt.executeUpdate();
         } catch (SQLException e) {
-            e.printStackTrace();
             CustomLogger.log(CustomLogger.LogLevel.ERROR, "Unable to update patient. SQLException");
+            throw new RuntimeException("Unable to update patient." + e.getMessage(), e);
         }
     }
 
@@ -98,8 +102,8 @@ public class PatientDAOImpl implements PatientDAO {
             stmt.setInt(1, id);
             stmt.executeUpdate();
         } catch (SQLException e) {
-            e.printStackTrace();
             CustomLogger.log(CustomLogger.LogLevel.ERROR, "Unable to delete patient. SQLException");
+            throw new RuntimeException("Unable to delete patient." + e.getMessage(), e);
         }
     }
 }

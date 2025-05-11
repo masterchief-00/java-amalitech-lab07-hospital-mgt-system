@@ -10,8 +10,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class BedDAOImpl implements BedDAO {
-    private Connection connection;
+    private final Connection connection;
     private WardDAO wardDAO;
+
+    public BedDAOImpl(Connection connection) {
+        this.connection = connection;
+    }
 
     @Override
     public Bed findById(int id) {
@@ -28,8 +32,8 @@ public class BedDAOImpl implements BedDAO {
                 bed.setWard(ward);
             }
         } catch (SQLException e) {
-            e.printStackTrace();
             CustomLogger.log(CustomLogger.LogLevel.ERROR, "Unable to find bed by id. SQLException");
+            throw new RuntimeException("Unable to find bed by id. " + e.getMessage(), e);
         }
 
         return bed;
@@ -49,8 +53,8 @@ public class BedDAOImpl implements BedDAO {
                 beds.add(bed);
             }
         } catch (SQLException e) {
-            e.printStackTrace();
             CustomLogger.log(CustomLogger.LogLevel.ERROR, "Unable to find beds. SQLException");
+            throw new RuntimeException("Unable to find beds. " + e.getMessage(), e);
         }
         return beds;
     }
@@ -62,8 +66,8 @@ public class BedDAOImpl implements BedDAO {
             stmt.setString(2, bed.getBedNo());
             stmt.executeUpdate();
         } catch (SQLException e) {
-            e.printStackTrace();
             CustomLogger.log(CustomLogger.LogLevel.ERROR, "Unable to save bed. SQLException");
+            throw new RuntimeException("Unable to save bed. " + e.getMessage(), e);
         }
     }
 
@@ -74,8 +78,8 @@ public class BedDAOImpl implements BedDAO {
             stmt.setString(2, bed.getBedNo());
             stmt.executeUpdate();
         } catch (SQLException e) {
-            e.printStackTrace();
             CustomLogger.log(CustomLogger.LogLevel.ERROR, "Unable to update bed. SQLException");
+            throw new RuntimeException("Unable to update bed. " + e.getMessage(), e);
         }
     }
 
@@ -85,8 +89,8 @@ public class BedDAOImpl implements BedDAO {
             stmt.setInt(1, id);
             stmt.executeUpdate();
         } catch (SQLException e) {
-            e.printStackTrace();
             CustomLogger.log(CustomLogger.LogLevel.ERROR, "Unable to delete bed. SQLException");
+            throw new RuntimeException("Unable to delete bed. " + e.getMessage(), e);
         }
     }
 }

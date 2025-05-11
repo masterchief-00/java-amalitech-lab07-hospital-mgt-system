@@ -11,8 +11,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class DepartmentDAOImpl implements DepartmentDAO {
-    private Connection connection;
+    private final Connection connection;
     private DoctorDAO doctorDAO;
+
+    public DepartmentDAOImpl(Connection connection) {
+        this.connection = connection;
+    }
 
     @Override
     public Department findById(int id) {
@@ -30,8 +34,8 @@ public class DepartmentDAOImpl implements DepartmentDAO {
                 department.setDirector(doctor);
             }
         } catch (SQLException e) {
-            e.printStackTrace();
             CustomLogger.log(CustomLogger.LogLevel.ERROR, "Unable to find department by id. SQLException");
+            throw new RuntimeException("Unable to find department by id. " + e.getMessage(), e);
         }
 
         return department;
@@ -52,8 +56,8 @@ public class DepartmentDAOImpl implements DepartmentDAO {
                 departments.add(department);
             }
         } catch (SQLException e) {
-            e.printStackTrace();
             CustomLogger.log(CustomLogger.LogLevel.ERROR, "Unable to find departments. SQLException");
+            throw new RuntimeException("Unable to find departments. " + e.getMessage(), e);
         }
         return departments;
     }
@@ -65,8 +69,8 @@ public class DepartmentDAOImpl implements DepartmentDAO {
             stmt.setInt(2, department.getDirector().getId());
             stmt.executeUpdate();
         } catch (SQLException e) {
-            e.printStackTrace();
             CustomLogger.log(CustomLogger.LogLevel.ERROR, "Unable to save department. SQLException");
+            throw new RuntimeException("Unable to save department. " + e.getMessage(), e);
         }
     }
 
@@ -77,8 +81,8 @@ public class DepartmentDAOImpl implements DepartmentDAO {
             stmt.setInt(2, department.getDirector().getId());
             stmt.executeUpdate();
         } catch (SQLException e) {
-            e.printStackTrace();
             CustomLogger.log(CustomLogger.LogLevel.ERROR, "Unable to update department. SQLException");
+            throw new RuntimeException("Unable to update department. " + e.getMessage(), e);
         }
     }
 
@@ -88,8 +92,8 @@ public class DepartmentDAOImpl implements DepartmentDAO {
             stmt.setInt(1, id);
             stmt.executeUpdate();
         } catch (SQLException e) {
-            e.printStackTrace();
             CustomLogger.log(CustomLogger.LogLevel.ERROR, "Unable to delete department. SQLException");
+            throw new RuntimeException("Unable to delete department. " + e.getMessage(), e);
         }
     }
 }

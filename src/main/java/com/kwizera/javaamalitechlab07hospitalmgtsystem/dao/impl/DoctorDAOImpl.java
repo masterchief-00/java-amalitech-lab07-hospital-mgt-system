@@ -11,8 +11,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class DoctorDAOImpl implements DoctorDAO {
-    private Connection connection;
+    private final Connection connection;
     private EmployeeDAO employeeDAO;
+
+    public DoctorDAOImpl(Connection connection) {
+        this.connection = connection;
+    }
 
     @Override
     public Doctor findById(int id) {
@@ -31,6 +35,7 @@ public class DoctorDAOImpl implements DoctorDAO {
         } catch (SQLException e) {
             e.printStackTrace();
             CustomLogger.log(CustomLogger.LogLevel.ERROR, "Unable to find doctor by id. SQLException");
+            throw new RuntimeException("Unable to find doctor by id. " + e.getMessage(), e);
         }
 
         return doctor;
@@ -52,6 +57,7 @@ public class DoctorDAOImpl implements DoctorDAO {
         } catch (SQLException e) {
             e.printStackTrace();
             CustomLogger.log(CustomLogger.LogLevel.ERROR, "Unable to find doctors. SQLException");
+            throw new RuntimeException("Unable to find doctors. " + e.getMessage(), e);
         }
         return doctors;
     }
@@ -63,8 +69,8 @@ public class DoctorDAOImpl implements DoctorDAO {
             stmt.setInt(2, doctor.getEmployee().getId());
             stmt.executeUpdate();
         } catch (SQLException e) {
-            e.printStackTrace();
             CustomLogger.log(CustomLogger.LogLevel.ERROR, "Unable to save doctor. SQLException");
+            throw new RuntimeException("Unable to save doctor. " + e.getMessage(), e);
         }
     }
 
@@ -75,8 +81,8 @@ public class DoctorDAOImpl implements DoctorDAO {
             stmt.setInt(2, doctor.getEmployee().getId());
             stmt.executeUpdate();
         } catch (SQLException e) {
-            e.printStackTrace();
             CustomLogger.log(CustomLogger.LogLevel.ERROR, "Unable to update doctor. SQLException");
+            throw new RuntimeException("Unable to update doctor. " + e.getMessage(), e);
         }
     }
 
@@ -86,8 +92,8 @@ public class DoctorDAOImpl implements DoctorDAO {
             stmt.setInt(1, id);
             stmt.executeUpdate();
         } catch (SQLException e) {
-            e.printStackTrace();
             CustomLogger.log(CustomLogger.LogLevel.ERROR, "Unable to delete doctor. SQLException");
+            throw new RuntimeException("Unable to delete doctor. " + e.getMessage(), e);
         }
     }
 }
