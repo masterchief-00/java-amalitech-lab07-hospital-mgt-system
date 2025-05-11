@@ -1,5 +1,6 @@
 package com.kwizera.javaamalitechlab07hospitalmgtsystem;
 
+import com.kwizera.javaamalitechlab07hospitalmgtsystem.utils.CustomLogger;
 import com.kwizera.javaamalitechlab07hospitalmgtsystem.utils.DBConnection;
 import com.kwizera.javaamalitechlab07hospitalmgtsystem.utils.DBInit;
 import javafx.application.Application;
@@ -27,7 +28,7 @@ public class Main extends Application {
         try (Connection connection = DBConnection.getConnection()) {
             DBInit.runSchemaSetup(connection);
         } catch (SQLException e) {
-
+            CustomLogger.log(CustomLogger.LogLevel.ERROR, "Unable to execute database schema");
         }
 
         launch();
